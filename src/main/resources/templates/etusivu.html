@@ -1,0 +1,80 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+
+        <style>
+
+            body {
+                font: normal 20px Verdana;
+                color: white;
+                background-color: lightpink;
+            }
+            h1 {
+                font: bold italic 30px Verdana;
+                color: white;
+            }
+            h2 {
+                font: bold 20px Verdana;
+                color: white;
+                padding-left: 0px; 
+                padding-right:0px; 
+                padding-bottom: 0px;
+                margin-left:0px; 
+                margin-right:0px;
+                margin-bottom: 10px;
+                text-align:left;
+            }
+            ol{ 
+                padding-top: 0px;
+                padding-left: 0px; 
+                padding-right:0px; 
+                margin-top: 0px;
+                margin-left:108px; 
+                margin-right:0px; 
+                margin-bottom: 50px;
+                text-align:left;
+            }
+            li {
+                margin-bottom: 5px;
+
+
+            }
+            a {
+                background-color: hotpink;
+                color: darkturquoise;
+                text-decoration: none;
+            
+            
+            }
+            .other {
+                background-color: greenyellow;
+                color: white;
+                text-decoration: none;
+            
+            
+
+
+        </style>
+
+        <title>
+            Reseptiarkisto
+        </title>
+
+    </head>
+
+
+    <body>
+        <h1>Tervetuloa Juuson reseptiarkistoon</h1>
+
+
+        <h2>Valmiit reseptit</h2><ol style="list-style: none;">
+            <li  th:each="reseptit : ${reseptit}">
+                <a th:href="@{~/{nimi}/ainesosat(nimi=${reseptit})}">
+                    <span th:text="${reseptit}">Resepti</span> 
+                </a>
+            </li>
+        </ol>
+        <a th:href="@{~/annos}" class= "other"><b>Lisää uusi resepti</b></a>
+    </body>
+</html>
