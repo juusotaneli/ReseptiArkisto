@@ -1,0 +1,143 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <style>
+            body {
+                font: normal 20px Arial;
+                color: lightpink;
+                background-color: whitesmoke;
+
+            }
+            h1 {
+                font: bold italic 30px Arial;
+                color: white;
+            }
+            h2 {
+                font: 20px Arial;
+                color: white;
+                background-color: lightpink;
+                margin-bottom: 10px;
+                margin-top: 80px;
+                text-align:left;
+            }
+
+            li {
+                margin-bottom: 5px;
+                margin-left: 36px;
+
+            }
+            a {
+                background-color: lightpink;
+                color: white;
+                text-decoration: none;
+
+            }
+            .other {
+                background-color: lightcyan;
+                color: lightpink;
+                font-size: 15px;
+                text-decoration: none;
+
+
+
+            }
+            .other1 {
+                background-color: lightyellow;
+                color: lightpink;
+                text-decoration: none;
+                margin-left: 5px;
+            }
+
+            .divstyle {
+                margin-top: 20px;
+                margin-bottom: 15px;
+
+            }
+            .divstyle2 {
+                margin-top: 5px;
+
+            }
+            .divstyle1 {
+                margin-top: 100px;
+
+            }
+            .divstyle3 {
+                margin-top: 25px;
+            }
+
+        </style>
+
+        <title>Resepti</title>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+
+        <h2>valmiit reseptit</h2><ol style="list-style: none;">
+            <li  th:each="resepti : ${reseptit}">
+                <a th:href="@{~/{id}/ainesosat(id=${resepti.id})}">
+                    <span th:text="${resepti.nimi}">Resepti</span>
+                </a>
+                <a th:href="@{~/reseptit/poista/{id}(id = ${resepti.id})}" class= "other1">poista</a>
+
+            </li>
+        </ol>
+
+        <span class = "other">lisää uusi resepti</span>
+        <form method="POST" action="/reseptit">
+            <div class = "divstyle2">
+                <span class = "other">nimi</span> <input type="text" name="uusi"/><br/>
+            </div>
+            <div>
+                <input type="submit" value="lisää resepti"/>
+            </div>
+        </form>
+        <div class="divstyle">
+            <h2>lisää raaka-aineita reseptiin</h2>
+        </div>
+        <form th:action="@{~/reseptit/tallenna}" method="post">
+            <div>
+                <span class = "other">reseptin nimi</span>
+                <select name = "a">
+                    <option th:each="resepti: ${reseptit}" th:value="${resepti.id}" th:text="${resepti.nimi}">
+                        annos
+                    </option>
+                </select>
+            </div>
+            <div>
+                <span class = "other">lisättävä raaka-aine</span>
+                <select name = "r">
+                    <option th:each="raakaAine: ${raakaAineet}" th:value="${raakaAine.id}" th:text="${raakaAine.nimi}">
+                        raakaAine
+                    </option>
+                </select>
+            </div>
+            <div>
+                <span class = "other">lisäysjärjestys</span>
+                <select name = "jarjestysnro">
+                    <option th:each="jarjestysnro: ${jarjestysnrot}" th:value="${jarjestysnro}" th:text="${jarjestysnro}">
+                        raakaAine
+                    </option>
+                </select>
+            </div>
+            <div>
+                <span class = "other">määrä (anna myös mittayksikkö)</span>
+                <input type= "text" name="maara" size="4"/>
+            </div>
+            <div>
+                <textarea rows="5" cols="37" name="ohje" placeholder="lisää halutessasi ohje..."></textarea>
+            </div>
+            <input type="submit" value="lisää raaka-aine"/>
+        </form>
+        <div class="divstyle3">
+            <a th:href="@{~/}" class= "other1">etusivulle</a>
+        </div>
+        
+        <div class="divstyle2">
+        <a th:href="@{~/ainesosat}" class = "other1">lisää uusi raaka-aine</a>
+        </div>
+
+    </body>
+
+</html>

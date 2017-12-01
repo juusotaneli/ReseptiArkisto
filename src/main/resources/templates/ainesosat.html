@@ -1,0 +1,95 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <style>
+            body {
+                color: lightpink;
+                background-color: whitesmoke;
+                text-align: left;
+                font: 20px Arial;
+            }
+            h2 {
+                font: 20px Arial;
+                color: white;
+                background-color: lightpink;
+                margin-bottom: 10px;
+                margin-top: 80px;
+                text-align:left;
+            }
+            a {
+                background-color: lightyellow;
+                color: lightpink;
+                text-decoration: none;
+                padding: 2px;
+            
+            
+                   
+            }
+            li {
+                padding-bottom: 5px;
+                margin-left: 0px;
+                text-align: left;
+
+            }
+            ol{
+                padding-left: 20px;
+                text-align: left;
+                
+            }
+            div{
+                margin-bottom: 10px;
+            }
+            .other {
+                background-color: lightcyan;
+                color: lightpink;
+                font-size: 15px;
+                text-decoration: none;
+            }
+            .divstyle1 {
+                margin-bottom: 0px;
+            }
+            .divstyle2 {
+                margin-bottom: 50px;
+
+            }
+        </style>
+        <title>Raaka-aineet</title>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+        <h2>raaka-aineet</h2>
+        <p> </p>
+            HUOM! raaka-aineen poistaminen poistaa sen myös kaikista resepteistä.
+        
+        <ol style="list-style: none;">
+            <li  th:each="raakaAine : ${raakaAineet}">
+                <span th:text="${raakaAine.nimi}">RaakaAine  </span> 
+                <a th:href="@{~/ainesosat/poista/{id}(id = ${raakaAine.id})}">poista</a>
+            </li>
+        </ol>
+
+        <span class = "other">lisää uusi raaka-aine</span>
+        <form method="POST" action="/ainesosat">
+            <div class ="divstyle1">
+                <span class = "other">nimi</span> <input type="text" name="uusi"/>
+            </div>
+            <div class = "divstyle2">
+                <input type="submit" value="lisää raaka-aine"/>
+            </div>
+        </form>
+        <div>
+        <a th:href="@{~/reseptit}">lisää uusi resepti</a>
+        </div>
+        
+        <div>
+        <a th:href="@{~/}">etusivulle</a>
+        </div>
+        
+        <div>
+        <a th:href="@{~/reseptit}">reseptien muokkaukseen</a>
+        </div>
+        
+    </body>
+</html>

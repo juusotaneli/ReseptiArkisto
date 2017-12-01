@@ -6,54 +6,57 @@
         <style>
 
             body {
-                font: normal 20px Verdana;
-                color: white;
-                background-color: lightpink;
+                font: normal 20px Arial;
+                color: lightpink;
+                background-color: whitesmoke;
+
             }
             h1 {
-                font: bold italic 30px Verdana;
-                color: white;
+                font: bold italic 30px Arial;
+                color: lightpink;
+                margin-top: 10px;
+                margin-bottom: 36px;
             }
             h2 {
-                font: bold 20px Verdana;
-                color: white;
-                padding-left: 0px; 
-                padding-right:0px; 
-                padding-bottom: 0px;
-                margin-left:0px; 
-                margin-right:0px;
+                font: 20px Arial;
+                color: lightpink;
+                background-color: lightcyan;
                 margin-bottom: 10px;
-                text-align:left;
-            }
-            ol{ 
-                padding-top: 0px;
-                padding-left: 0px; 
-                padding-right:0px; 
                 margin-top: 0px;
-                margin-left:108px; 
-                margin-right:0px; 
-                margin-bottom: 50px;
                 text-align:left;
             }
+
             li {
                 margin-bottom: 5px;
+                margin-left: 37px;
 
-
+            }
+            ol {
+                margin-bottom: 50px;
             }
             a {
-                background-color: hotpink;
-                color: darkturquoise;
-                text-decoration: none;
-            
-            
-            }
-            .other {
-                background-color: greenyellow;
+                background-color: lightpink;
                 color: white;
                 text-decoration: none;
+            }
+            .other {
+                background-color: lightyellow;
+                color: lightpink;
+                text-decoration: none;
+                padding: 1px;
+                
+     
+            }
+            .other1 {
+                background-color: powderblue;
+                color: lightpink;
+                text-decoration: none;
+                margin-left: 5px;
+            }
+            div {
+                margin-bottom: 10px;
+            }
             
-            
-
 
         </style>
 
@@ -67,14 +70,23 @@
     <body>
         <h1>Tervetuloa Juuson reseptiarkistoon</h1>
 
+        <h2>valmiit reseptit</h2>
 
-        <h2>Valmiit reseptit</h2><ol style="list-style: none;">
-            <li  th:each="reseptit : ${reseptit}">
-                <a th:href="@{~/{nimi}/ainesosat(nimi=${reseptit})}">
-                    <span th:text="${reseptit}">Resepti</span> 
+        <ol style="list-style: none;">
+
+            <li th:each="resepti : ${reseptit}">
+                <a th:href="@{~/{id}/ainesosat(id=${resepti.id})}" > 
+                    <span th:text="${resepti.nimi}" >Resepti </span>
                 </a>
             </li>
         </ol>
-        <a th:href="@{~/annos}" class= "other"><b>Lisää uusi resepti</b></a>
+        
+        <div>
+            <a th:href="@{~/reseptit}" class= "other">lisää uusi resepti</a>
+        </div>
+        <div>
+            <a th:href="@{~/ainesosat}" class= "other">lisää ja poista raaka-aineita</a>
+        </div>
+        
     </body>
 </html>

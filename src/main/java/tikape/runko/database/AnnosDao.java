@@ -69,17 +69,29 @@ public class AnnosDao implements Dao<Annos, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        // ei toteutettu
+        for (Annos a : findAll()) {
+            if (a.getId().equals(key)) {
+                try (Connection conn = database.getConnection()) {
+                    PreparedStatement stmt = conn.prepareStatement(
+                            "DELETE FROM Annos WHERE id = ?");
+                    stmt.setInt(1, key);
+                    stmt.executeUpdate();
+                }
+            }
+        }
     }
-
     @Override
     public boolean saveOrUpdate(Annos object) throws SQLException {
+  
         List<String> reseptit = new ArrayList<>();
+        List<Integer> idt = new ArrayList<>();
+        int i = 1;
 
         for (Annos a : findAll()) {
             reseptit.add(a.getNimi());
         }
         if (reseptit.contains(object.getNimi())) {
+            reseptit.removeAll(reseptit);
             return false;
 
         } else {
@@ -87,9 +99,19 @@ public class AnnosDao implements Dao<Annos, Integer> {
             Connection connection = database.getConnection();
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO Annos (id, nimi) VALUES (?,?)");
 
-            stmt.setInt(1, findAll().size() + 1);
-            stmt.setString(2, object.getNimi());
+            for (Annos a : findAll()) {
+                idt.add(a.getId());
+            }
+            //tässä varmistetaan ettei id voi olla koskaan sama
+            if (!idt.isEmpty()) {
+                i = idt.get(idt.size() - 1);
+                stmt.setInt(1, i + 1);
+                stmt.setString(2, object.getNimi());
 
+            } else {
+                stmt.setInt(1, i);
+                stmt.setString(2, object.getNimi());
+            }
             stmt.executeUpdate();
             return true;
         }

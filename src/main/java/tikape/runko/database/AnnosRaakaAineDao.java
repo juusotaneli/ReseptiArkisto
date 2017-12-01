@@ -24,7 +24,7 @@ public class AnnosRaakaAineDao implements Dao<AnnosRaakaAine, Integer> {
     @Override
     public AnnosRaakaAine findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM AnnosRaakaAine WHERE id = ?");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM AnnosRaakaAine WHERE annos_id = ?");
         stmt.setObject(1, key);
 
         ResultSet rs = stmt.executeQuery();
@@ -32,15 +32,14 @@ public class AnnosRaakaAineDao implements Dao<AnnosRaakaAine, Integer> {
         if (!hasOne) {
             return null;
         }
-        
-        Integer id = rs.getInt("id");   
+
         Integer annos_id = rs.getInt("annos_id");
-        Integer raakaAine_id = rs.getInt("raakaAine_id");
-        Integer jarjetysNumero = rs.getInt("jarjestynro");
-        Integer maara = rs.getInt("maara");
+        Integer raakaAine_id = rs.getInt("ra_id");
+        Integer jarjetysNumero = rs.getInt("jarjestysnro");
+        String maara = rs.getString("maara");
         String ohje = rs.getString("ohje");
 
-        AnnosRaakaAine a = new AnnosRaakaAine(id, annos_id, raakaAine_id, jarjetysNumero, maara, ohje);
+        AnnosRaakaAine a = new AnnosRaakaAine(annos_id, raakaAine_id, jarjetysNumero, maara, ohje);
 
         rs.close();
         stmt.close();
@@ -56,34 +55,86 @@ public class AnnosRaakaAineDao implements Dao<AnnosRaakaAine, Integer> {
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM AnnosRaakaAine");
 
         ResultSet rs = stmt.executeQuery();
-        List<AnnosRaakaAine> opiskelijat = new ArrayList<>();
+        List<AnnosRaakaAine> ara = new ArrayList<>();
         while (rs.next()) {
-            
-            Integer id = rs.getInt("id");
             Integer annos_id = rs.getInt("annos_id");
-            Integer raakaAine_id = rs.getInt("RaakaAine_id");
-            Integer jarjetysNumero = rs.getInt("jarjestynro");
-            Integer maara = rs.getInt("maara");
+            Integer raakaAine_id = rs.getInt("ra_id");
+            Integer jarjetysNumero = rs.getInt("jarjestysnro");
+            String maara = rs.getString("maara");
             String ohje = rs.getString("ohje");
 
-            AnnosRaakaAine a = new AnnosRaakaAine(id, annos_id, raakaAine_id, jarjetysNumero, maara, ohje);
+            AnnosRaakaAine a = new AnnosRaakaAine(annos_id, raakaAine_id, jarjetysNumero, maara, ohje);
+            ara.add(a);
         }
 
         rs.close();
         stmt.close();
         connection.close();
 
-        return opiskelijat;
+        return ara;
     }
 
-    @Override
     public void delete(Integer key) throws SQLException {
-        // ei toteutettu
+        for (AnnosRaakaAine a : findAll()) {
+            if (a.getAnnos_id().equals(key)) {
+                try (Connection conn = database.getConnection()) {
+                    PreparedStatement stmt = conn.prepareStatement(
+                            "DELETE FROM AnnosRaakaAine WHERE annos_id = ?");
+                    stmt.setInt(1, key);
+                    stmt.executeUpdate();
+                }
+            }
+        }
+    }
+
+    public void deleteRaakaAine(Integer key) throws SQLException {
+        for (AnnosRaakaAine a : findAll()) {
+            if (a.getRaakaAineId().equals(key)) {
+                try (Connection conn = database.getConnection()) {
+                    PreparedStatement stmt = conn.prepareStatement(
+                            "DELETE FROM AnnosRaakaAine WHERE ra_id = ?");
+                    stmt.setInt(1, key);
+                    stmt.executeUpdate();
+                }
+            }
+        }
     }
 
     @Override
-    public boolean saveOrUpdate(AnnosRaakaAine key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean saveOrUpdate(AnnosRaakaAine object) throws SQLException {
+
+        for (AnnosRaakaAine a : findAll()) {
+            if (a.getAnnos_id().equals(object.getAnnos_id()) && a.getRaakaAineId().equals(object.getRaakaAineId())) {
+            return false;
+            }
+        }
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO AnnosRaakaAine (annos_id, ra_id, jarjestysnro, maara, ohje ) VALUES (?, ?, ?, ?, ?)");
+
+        stmt.setInt(1, object.getAnnos_id());
+        stmt.setInt(2, object.getRaakaAineId());
+        stmt.setInt(3, object.getJarjestysNumero());
+        stmt.setString(4, object.getMaara());
+        stmt.setString(5, object.getOhje());
+
+        stmt.executeUpdate();
+
+        return true;
+
+    }
+
+    public boolean updateOrderNo(AnnosRaakaAine object) throws SQLException {
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("UPDATE AnnosRaakaAine SET jarjestysnro = ? WHERE annos_id = ? AND ra_id = ?");
+
+        stmt.setInt(1, object.getJarjestysNumero() + 1);
+        stmt.setInt(2, object.getAnnos_id());
+        stmt.setInt(3, object.getRaakaAineId());
+        stmt.executeUpdate();
+        
+        return true;
     }
 
 }
